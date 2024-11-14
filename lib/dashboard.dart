@@ -5,6 +5,9 @@ import 'profile_page.dart';
 import 'cart_item.dart';
 import 'package:provider/provider.dart';
 import 'cart_provider.dart';
+import 'tools_page.dart';
+import 'calculator_page.dart';
+import 'currency_conversion_page.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -18,6 +21,7 @@ class _DashboardState extends State<Dashboard> {
   static List<Widget> _pages = <Widget>[
     BurgerMenuPage(),
     CartPage(),
+    ToolsPage(),
     ProfilePage(),
   ];
 
@@ -44,24 +48,33 @@ class _DashboardState extends State<Dashboard> {
         child: _pages[_selectedIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.restaurant_menu),
-            label: 'Menu',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Keranjang',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.orange,
-        onTap: _onItemTapped,
-      ),
+  items: const <BottomNavigationBarItem>[
+    BottomNavigationBarItem(
+      icon: Icon(Icons.restaurant_menu),
+      label: 'Menu',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.shopping_cart),
+      label: 'Keranjang',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.build),
+      label: 'Tools',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.person),
+      label: 'Profil',
+    ),
+  ],
+  currentIndex: _selectedIndex,
+  selectedItemColor: Colors.orange, 
+  unselectedItemColor: Colors.black, 
+  backgroundColor: Colors.white, 
+  onTap: _onItemTapped,
+  type: BottomNavigationBarType.fixed, 
+  selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+  unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal),
+)
     );
   }
 }
@@ -153,6 +166,38 @@ class _BurgerMenuPageState extends State<BurgerMenuPage> {
           ElevatedButton(
             onPressed: _addAllToCart,
             child: Text('Tambahkan Semua ke Keranjang'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+class ToolsPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CalculatorPage()),
+              );
+            },
+            child: Text("Kalkulator", style: TextStyle(fontSize: 20)),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CurrencyConversionPage()),
+              );
+            },
+            child: Text("Konversi Kurs", style: TextStyle(fontSize: 20)),
           ),
         ],
       ),
