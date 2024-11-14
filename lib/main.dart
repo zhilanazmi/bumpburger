@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'cart_provider.dart';
 import 'splash_screen.dart';
 
 void main() {
@@ -8,12 +10,13 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Burger Cashier App',
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
+    return ChangeNotifierProvider(
+      create: (context) => CartProvider(),
+      child: MaterialApp(
+        title: 'Kasir Burger',
+        theme: ThemeData(primarySwatch: Colors.orange),
+        home: SplashScreen(),
       ),
-      home: SplashScreen(),
     );
   }
 }

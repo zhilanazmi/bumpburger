@@ -13,11 +13,11 @@ class ProfilePage extends StatelessWidget {
           ),
           SizedBox(height: 20),
           Text(
-            'Nama: Nama Anda',
+            'Nama: Zhillan Azmi',
             style: TextStyle(fontSize: 18),
           ),
           Text(
-            'NIM: 123456789',
+            'NRP: 152022247',
             style: TextStyle(fontSize: 18),
           ),
         ],

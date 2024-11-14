@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'burger_menu.dart';
-import 'order_page.dart';
-import 'profile_page.dart';
 import 'cart_page.dart';
+import 'profile_page.dart';
+import 'cart_item.dart';
+import 'package:provider/provider.dart';
+import 'cart_provider.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -29,7 +31,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard Kasir Burger'),
+        title: Text('BumpBurger Menu'),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -65,32 +67,94 @@ class _DashboardState extends State<Dashboard> {
 }
 
 // Halaman yang menampilkan daftar menu burger di Dashboard
-class BurgerMenuPage extends StatelessWidget {
+class BurgerMenuPage extends StatefulWidget {
+  @override
+  _BurgerMenuPageState createState() => _BurgerMenuPageState();
+}
+
+class _BurgerMenuPageState extends State<BurgerMenuPage> {
+  // Map untuk menyimpan jumlah burger yang dipilih
+  Map<int, int> burgerQuantities = {};
+
+  // Menambahkan semua item ke keranjang
+  void _addAllToCart() {
+    // Iterasi setiap burger dan menambahkan yang quantity > 0 ke keranjang
+    for (int i = 0; i < burgerMenus.length; i++) {
+      int quantity = burgerQuantities[i] ?? 0;
+      if (quantity > 0) {
+        // Membuat CartItem untuk burger yang dipilih
+        CartItem cartItem = CartItem(
+          name: burgerMenus[i].name,
+          price: burgerMenus[i].price,
+          quantity: quantity,
+        );
+        // Menambahkan item ke keranjang menggunakan CartProvider
+        Provider.of<CartProvider>(context, listen: false).addItem(cartItem);
+      }
+    }
+
+    // Menampilkan SnackBar sebagai feedback ke pengguna
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Semua item yang dipilih berhasil ditambahkan ke keranjang!')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
-        itemCount: burgerMenus.length,
-        itemBuilder: (context, index) {
-          final burger = burgerMenus[index];
-          return Card(
-            child: ListTile(
-              leading: Image.asset(burger.image, width: 60, height: 60, fit: BoxFit.cover),
-              title: Text(burger.name),
-              subtitle: Text('Rp ${burger.price}'),
-              trailing: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => OrderPage(burger: burger)),
-                  );
-                },
-                child: Text('Pesan'),
-              ),
+      child: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: burgerMenus.length,
+              itemBuilder: (context, index) {
+                final burger = burgerMenus[index];
+                int quantity = burgerQuantities[index] ?? 0; // Default quantity 0
+
+                return Card(
+                  child: ListTile(
+                    leading: Image.asset(burger.image, width: 60, height: 60, fit: BoxFit.cover),
+                    title: Text(burger.name),
+                    subtitle: Text('Rp ${burger.price}'),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Tombol untuk mengurangi quantity
+                        IconButton(
+                          icon: Icon(Icons.remove),
+                          onPressed: () {
+                            setState(() {
+                              if (quantity > 0) {
+                                burgerQuantities[index] = quantity - 1;
+                              }
+                            });
+                          },
+                        ),
+                        // Tampilkan jumlah burger yang dipilih
+                        Text('$quantity', style: TextStyle(fontSize: 18)),
+                        // Tombol untuk menambah quantity
+                        IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () {
+                            setState(() {
+                              burgerQuantities[index] = quantity + 1;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
-          );
-        },
+          ),
+          // Tombol untuk menambahkan semua item yang dipilih ke keranjang
+          ElevatedButton(
+            onPressed: _addAllToCart,
+            child: Text('Tambahkan Semua ke Keranjang'),
+          ),
+        ],
       ),
     );
   }
