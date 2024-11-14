@@ -31,7 +31,16 @@ class _DashboardState extends State<Dashboard> {
       appBar: AppBar(
         title: Text('Dashboard Kasir Burger'),
       ),
-      body: _pages[_selectedIndex],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.orange, Colors.yellow], // Warna gradien
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: _pages[_selectedIndex],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
